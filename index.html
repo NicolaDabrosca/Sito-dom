@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Red Neon</title>
+    <style>
+        /* --- Stile Generale --- */
+        body {
+            font-family: 'Courier New', Courier, monospace; /* Font digitale */
+            background-color: #050505; /* Sfondo quasi nero */
+            color: #ff0000; /* Colore base rosso neon */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Per evitare barre di scorrimento */
+        }
+
+        /* --- Contenitore Principale --- */
+        .container {
+            text-align: center;
+            background: rgba(20, 0, 0, 0.5); /* Sfondo semi-trasparente scuro */
+            padding: 50px 30px;
+            border-radius: 20px;
+            border: 2px solid #550000; /* Bordo scuro sottile */
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3), /* Bagliore esterno */
+                        inset 0 0 10px rgba(255, 0, 0, 0.2); /* Bagliore interno */
+        }
+
+        /* --- Il Countdown --- */
+        .countdown {
+            display: flex;
+            gap: 30px; /* Spazio tra i blocchi */
+            justify-content: center;
+        }
+
+        /* --- Singoli blocchi (Giorni, Ore, ecc.) --- */
+        .time-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- I Numeri Grandi --- */
+        .time-box span {
+            font-size: 5rem; /* Molto grande */
+            font-weight: bold;
+            line-height: 1;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.8), /* Effetto Neon */
+                         0 0 20px rgba(255, 0, 0, 0.5),
+                         0 0 30px rgba(255, 0, 0, 0.3);
+        }
+
+        /* --- Le Etichette (Giorni, Ore, Minuti, Secondi) --- */
+        .label {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 5px; /* Spaziatura tra le lettere */
+            margin-top: 10px;
+            color: #cc0000; /* Rosso leggermente più scuro per le etichette */
+            opacity: 0.9;
+        }
+
+        /* --- Stile per quando scade il tempo --- */
+        #expired-message {
+            display: none; /* Nascosto di default */
+            font-size: 3rem;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px #ff0000;
+            animation: blink 1s infinite; /* Animazione lampeggiante */
+        }
+
+        /* Animazione lampeggiante */
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* --- Responsive (Adattamento Mobile) --- */
+        @media (max-width: 600px) {
+            .container { padding: 30px 15px; }
+            .countdown { gap: 15px; }
+            .time-box span { font-size: 3rem; }
+            .label { letter-spacing: 2px; font-size: 0.8rem; }
+            #expired-message { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="countdown" id="countdown">
+            <div class="time-box"><span id="days">00</span><label class="label">Giorni</label></div>
+            <div class="time-box"><span id="hours">00</span><label class="label">Ore</label></div>
+            <div class="time-box"><span id="minutes">00</span><label class="label">Minuti</label></div>
+            <div class="time-box"><span id="seconds">00</span><label class="label">Secondi</label></div>
+        </div>
+        <!-- Messaggio che appare alla scadenza -->
+        <div id="expired-message">Tempo Scaduto</div>
+    </div>
+
+    <script>
+        // --- CONFIGURAZIONE DATA ---
+        // Data impostata al 1° ottobre 2026 alle ore 00:00:00
+        const targetDateStr = "2026-10-01T00:00:00"; 
+        const targetDate = new Date(targetDateStr).getTime();
+
+        // Aggiorna il countdown ogni secondo
+        const timer = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            // Calcoli per giorni, ore, minuti e secondi
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Se il tempo è scaduto
+            if (distance < 0) {
+                clearInterval(timer);
+                document.getElementById("countdown").style.display = "none";
+                document.getElementById("expired-message").style.display = "block";
+                return;
+            }
+
+            // Aggiorna gli elementi HTML aggiungendo lo zero davanti se < 10
+            document.getElementById("days").innerText = String(days).padStart(2, '0');
+            document.getElementById("hours").innerText = String(hours).padStart(2, '0');
+            document.getElementById("minutes").innerText = String(minutes).padStart(2, '0');
+            document.getElementById("seconds").innerText = String(seconds).padStart(2, '0');
+
+        }, 1000);
+    </script>
+
+</body>
+</html>
