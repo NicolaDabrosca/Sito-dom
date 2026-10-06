@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countdown Red Neon</title>
+    <title>Countdown Red Neon - Casa di Domenik</title>
     <style>
         /* --- Stile Generale --- */
         body {
@@ -27,6 +27,27 @@
             border: 2px solid #550000; /* Bordo scuro sottile */
             box-shadow: 0 0 20px rgba(255, 0, 0, 0.3), /* Bagliore esterno */
                         inset 0 0 10px rgba(255, 0, 0, 0.2); /* Bagliore interno */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- Testi Aggiuntivi --- */
+        .greeting {
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.5);
+            font-weight: bold;
+        }
+
+        .location {
+            font-size: 1.5rem;
+            margin-top: 30px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 5px rgba(255, 0, 0, 0.8);
+            color: #cc0000;
         }
 
         /* --- Il Countdown --- */
@@ -80,42 +101,47 @@
         /* --- Responsive (Adattamento Mobile) --- */
         @media (max-width: 600px) {
             .container { padding: 30px 15px; }
+            .greeting { font-size: 1.8rem; margin-bottom: 20px; }
+            .location { font-size: 1rem; margin-top: 20px; }
             .countdown { gap: 15px; }
             .time-box span { font-size: 3rem; }
             .label { letter-spacing: 2px; font-size: 0.8rem; }
-            #expired-message { font-size: 2rem; }
+            #expired-message { font-size: 2rem; text-align: center; }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <!-- Scritta aggiunta: Vi aspetto -->
+        <div class="greeting">Vi aspetto!</div>
+        
         <div class="countdown" id="countdown">
             <div class="time-box"><span id="days">00</span><label class="label">Giorni</label></div>
             <div class="time-box"><span id="hours">00</span><label class="label">Ore</label></div>
             <div class="time-box"><span id="minutes">00</span><label class="label">Minuti</label></div>
             <div class="time-box"><span id="seconds">00</span><label class="label">Secondi</label></div>
         </div>
+        
         <!-- Messaggio che appare alla scadenza -->
-        <div id="expired-message">Tempo Scaduto</div>
+        <div id="expired-message">Tempo Scaduto!<br>Vi sto aspettando.</div>
+
+        <!-- Scritta aggiunta: Location -->
+        <div class="location">Location: Casa di Domenik</div>
     </div>
 
     <script>
         // --- CONFIGURAZIONE DATA ---
-        // Data impostata al 1° ottobre 2026 alle ore 00:00:00
-        const targetDateStr = "2026-10-01T21:00:00"; 
-        const targetDate = new Date(targetDateStr).getTime();
+        // Calcoliamo la data di oggi e impostiamo l'orario esattamente alle 21:30
+        let targetDate = new Date();
+        targetDate.setHours(21, 30, 0, 0); 
+        
+        const targetTime = targetDate.getTime();
 
         // Aggiorna il countdown ogni secondo
         const timer = setInterval(function() {
             const now = new Date().getTime();
-            const distance = targetDate - now;
-
-            // Calcoli per giorni, ore, minuti e secondi
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            const distance = targetTime - now;
 
             // Se il tempo è scaduto
             if (distance < 0) {
@@ -124,6 +150,12 @@
                 document.getElementById("expired-message").style.display = "block";
                 return;
             }
+
+            // Calcoli per giorni, ore, minuti e secondi
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
             // Aggiorna gli elementi HTML aggiungendo lo zero davanti se < 10
             document.getElementById("days").innerText = String(days).padStart(2, '0');
